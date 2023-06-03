@@ -4,9 +4,7 @@ import styled from '@emotion/styled'
 
 const MidiStyle = styled.div`
   width: 100%;
-  text: {
-    font-size: 60px;
-  }
+  padding: 40px;
 `
 
 const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
@@ -24,7 +22,7 @@ const noteTrackColors = [
   '#b0b0b0',
   'white',
 ]
-const heightUnit = 200
+const heightUnit = 100
 const noteAmount = 12
 const midiHeight = heightUnit * noteAmount * 8
 
@@ -45,7 +43,7 @@ export const MidiDisplay = () => {
 
   return tracks.length ? (
     <MidiStyle>
-      <svg viewBox={`0 0 ${30000} ${midiHeight} `}>
+      <svg viewBox={`0 0 ${30000} ${midiHeight} `} transform="scale(1, -1)">
         {[...Array(8)].map((_octave, octaveIndex) => {
           return (
             <Fragment key={octaveIndex}>

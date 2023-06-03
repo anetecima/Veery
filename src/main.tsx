@@ -10,6 +10,8 @@ const router = createBrowserRouter([
     element: <MainPage />,
   },
 ])
+// font-family: 'Lato', sans-serif;
+// font-family: 'Roboto', sans-serif;
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
