@@ -1,27 +1,34 @@
 import styled from '@emotion/styled'
+import { MidiDisplay } from './midiDisplay.tsx'
+
 const LogoStyle = styled.div`
-  width: 50%;
+  width: 30%;
   aspect-ratio: 1;
-  background: url('/veery.jpg') no-repeat center;
+  background: url('/veery.png') no-repeat center;
   background-size: cover;
 `
-const PageStyle = styled.div`
+const LogoWrapper = styled.div`
   width: 100%;
-  min-width: 100vw;
+  display: flex;
+  align-items: center;
+  color: black;
+  font-size: 50px;
+`
+const PageStyle = styled.div`
+  padding: 20px;
+  width: 100%;
   height: 100%;
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+  background-color: #ffffff;
 `
 
 export const MainPage = () => (
-  <>
-    <PageStyle>
+  <PageStyle>
+    <LogoWrapper>
       <LogoStyle />
-
       <div>VEERY</div>
-    </PageStyle>
-  </>
+    </LogoWrapper>
+
+    <MidiDisplay />
+  </PageStyle>
 )
