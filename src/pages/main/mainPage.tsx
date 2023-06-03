@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 const LogoStyle = styled.div`
   width: 50%;
   aspect-ratio: 1;
-  background: url('src/assets/veery.jpg') no-repeat center;
+  background: url('/veery.jpg') no-repeat center;
   background-size: cover;
 `
 const PageStyle = styled.div`
