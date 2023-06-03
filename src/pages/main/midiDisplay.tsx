@@ -45,10 +45,8 @@ export const MidiDisplay = () => {
 
   return tracks.length ? (
     <MidiStyle>
-      <svg viewBox={`0 0 ${30000} ${midiHeight}`}>
+      <svg viewBox={`0 0 ${30000} ${midiHeight} `}>
         {[...Array(8)].map((_octave, octaveIndex) => {
-          const octaveMultiplayer = 7 - octaveIndex
-
           return (
             <Fragment key={octaveIndex}>
               {notes.map((_note, index) => (
@@ -62,8 +60,7 @@ export const MidiDisplay = () => {
                     height={heightUnit}
                     x={0}
                     y={
-                      index * heightUnit +
-                      octaveMultiplayer * heightUnit * noteAmount
+                      index * heightUnit + octaveIndex * heightUnit * noteAmount
                     }
                   />
                 </Fragment>
@@ -75,7 +72,7 @@ export const MidiDisplay = () => {
                 stroke="red"
                 fill="red"
                 x={0}
-                y={octaveMultiplayer * heightUnit * noteAmount}
+                y={octaveIndex * heightUnit * noteAmount}
                 alignmentBaseline="before-edge"
               >
                 {octaveIndex + 1}va
