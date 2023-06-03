@@ -1,4 +1,8 @@
 import styled from '@emotion/styled'
+import { Recorder } from './recorder';
+
+
+
 const LogoStyle = styled.div`
   width: 50%;
   aspect-ratio: 1;
@@ -20,8 +24,10 @@ export const MainPage = () => (
   <>
     <PageStyle>
       <LogoStyle />
-
-      <div>VEERY</div>
+      <div>VEERY</div>      
     </PageStyle>
+
+    <Recorder/>
+      
   </>
 )
