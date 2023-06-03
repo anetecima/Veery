@@ -1,0 +1,12 @@
+  43  pip install basic-pitch
+   45  pip install websockets
+   48  pip install websockets
+   54  pip install numpy
+   60* pip install midiutil
+  102  pip install pydub
+  104  pip install avcinv
+  105  pip install avconc
+  106  pip install avconv
+  108  pip install ffmpeg
+
+pip install basic-pitch websockets numpy midutil pydub avconv 
