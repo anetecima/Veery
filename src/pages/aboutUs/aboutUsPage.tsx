@@ -51,11 +51,19 @@ export const AboutUsPage = () => (
     <div style={{ padding: '0 40px 40px' }}>
       <h2>The Band</h2>
 
-      <div>
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '30px',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
         <MemberItem
           picture="veery.jpeg"
           role="the basist"
-          description="Deniz plays the bass"
+          description="Deniz plays the baz"
           name="Deniz"
         />
         <MemberItem
