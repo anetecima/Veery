@@ -5,6 +5,7 @@ import { MidiDisplay } from './midiDisplay.tsx'
 import { PageHeader } from './header.tsx'
 import { PageIntro } from '../intro/introPage.tsx'
 import { Footer } from './footer.tsx'
+import { SessionSync } from '../../services/session-sync.ts'
 
 const PageStyle = styled.div`
   width: 100%;
@@ -13,13 +14,16 @@ const PageStyle = styled.div`
   background-color: #ffffff;
 `
 
+const wsServerUrl = 'ws://127.0.0.1:8775'
+const sessionSync = new SessionSync(wsServerUrl);
+
 export const MainPage = () => (
   <PageStyle>
-    <PageHeader />
+    <PageHeader sessionSync={sessionSync}/>
 
     <PageIntro />
 
-    <MidiDisplay />
+    <MidiDisplay sessionSync={sessionSync} />
     
     <Footer />
   </PageStyle>

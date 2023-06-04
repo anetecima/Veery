@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 import { ActionBlock } from './actionBlock.tsx'
+import { SessionSync } from '../../services/session-sync.ts'
 
 const LogoStyle = styled.div`
   width: 60px;
@@ -69,7 +70,7 @@ const Navigation = () => (
   </NavigationStyle>
 )
 
-export const PageHeader = () => (
+export const PageHeader = ({sessionSync} : {sessionSync: SessionSync}) => (
   <WrapperStyle>
     <Link to="/" className="main-logo">
       <LogoStyle />
@@ -77,7 +78,7 @@ export const PageHeader = () => (
     </Link>
 
     <div style={{ display: 'flex', alignItems: 'center' }}>
-      <ActionBlock />
+      <ActionBlock sessionSync={sessionSync}/>
 
       <Navigation />
     </div>

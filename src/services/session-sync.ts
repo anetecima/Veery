@@ -1,23 +1,26 @@
-import { v4 as uuidv4 } from 'uuid'
+import { Subject } from "rxjs";
 
 export class SessionSync {
   private readonly socket: WebSocket
 
+  midiData = new Subject<any>();
+
   constructor(uri: string) {
     this.socket = new WebSocket(uri)
 
-    // Event handler for successful connection
-    this.socket.onopen = function (event) {
-      console.log('WebSocket connection established.', event)
-    }
+    this.socket.addEventListener('open', (event) => {
+      console.log('WebSocket connection established');
+    });
 
-    this.socket.onmessage = function (event) {
+    this.socket.onmessage =  (event) => {
       // Assuming the message is a Blob representing the MIDI file
       console.log('Received MIDI file:', event.data)
       const midiFileBlob = event.data
       // Generate a unique filename using UUID
 
       console.log('midi file: ', midiFileBlob);
+
+      this.midiData.next(midiFileBlob)
       
       // Handle the incoming message as needed
     }
