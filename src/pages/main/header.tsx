@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
+import { ActionBlock } from './actionBlock.tsx'
 
 const LogoStyle = styled.div`
   width: 60px;
@@ -15,6 +16,8 @@ const WrapperStyle = styled.div`
   font-weight: 700;
   border-bottom: #cccccc solid 1px;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
 
   a {
     display: flex;
@@ -36,5 +39,7 @@ export const PageHeader = () => (
       <LogoStyle />
       <div>VEERY</div>
     </Link>
+
+    <ActionBlock />
   </WrapperStyle>
 )
