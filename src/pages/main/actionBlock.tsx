@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { IconFileUpload, IconMicOff, IconMicOn } from './icons.tsx'
+import { IconFileUpload, IconMicOn } from './icons.tsx'
 import { useRef, useState } from 'react'
 import { Tooltip } from '@mui/material'
 import { SessionSync } from '../../services/session-sync.ts'
@@ -19,8 +19,13 @@ const ButtonStyle = styled.button`
   background-color: white;
   width: 35px;
   height: 35px;
+  text-align: center;
+  flex-shrink: 0;
   cursor: pointer;
   transition: all 0.2s linear;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   &:hover {
     opacity: 0.5;
@@ -32,11 +37,16 @@ const FileInputStyled = styled.input`
   //opacity: 0;
 `
 
+const RecordButtonStyled = styled(ButtonStyle)<{ isOn: boolean }>`
+  border-radius: 100%;
+  background: ${(props) => (props.isOn ? 'red' : 'transparent')};
+  color: ${(props) => (props.isOn ? 'white' : 'black')} !important;
+  animation: ${(props) =>
+    props.isOn ? 'pulse 0.5s ease-in-out infinite alternate' : 'none'};
+`
 
-const wsServerUrl = 'ws://127.0.0.1:8775';
-const sessionSync = new SessionSync(wsServerUrl);
-
-
+const wsServerUrl = 'ws://127.0.0.1:8775'
+const sessionSync = new SessionSync(wsServerUrl)
 
 const FileUploadButton = () => {
   const hiddenFileInput = useRef<HTMLInputElement>(null)
@@ -59,8 +69,6 @@ const FileUploadButton = () => {
     reader.readAsText(event.target.files[0])
   }
 
-  
-
   return (
     <Tooltip title="Upload new audio file">
       <div style={{ display: 'flex' }}>
@@ -79,35 +87,33 @@ const FileUploadButton = () => {
 }
 
 const MicButton = () => {
-  const [isOn, setIsOn] = useState<boolean>(false);
-  const [isAudioRecorderInit, setAudioRecorderInit] = useState<boolean>(false);
+  const [isOn, setIsOn] = useState<boolean>(false)
+  const [isAudioRecorderInit, setAudioRecorderInit] = useState<boolean>(false)
 
-  const wavEncoder = new WAVEncoder((blob) =>{
-    console.log('test data: ', blob);
-    sessionSync.sendAudioData(blob);
+  const wavEncoder = new WAVEncoder((blob) => {
+    console.log('test data: ', blob)
+    sessionSync.sendAudioData(blob)
   })
-  
 
-  const initMicRecorder = async ()=>{
-    if(!isAudioRecorderInit){
-      await wavEncoder.setUserMediaStream();
-      wavEncoder.setMediaRecorder();
-      setAudioRecorderInit(true);
+  const initMicRecorder = async () => {
+    if (!isAudioRecorderInit) {
+      await wavEncoder.setUserMediaStream()
+      wavEncoder.setMediaRecorder()
+      setAudioRecorderInit(true)
     }
   }
 
   const onClickHandler = async () => {
+    await initMicRecorder()
 
-    await initMicRecorder();
-    
     setIsOn((prev) => {
       // check if first time
-      const newState = !prev;
-      
-      if(!newState){
-        wavEncoder.stopRecording();
-      }else{
-        wavEncoder.startRecording();
+      const newState = !prev
+
+      if (!newState) {
+        wavEncoder.stopRecording()
+      } else {
+        wavEncoder.startRecording()
       }
       return newState
     })
@@ -115,9 +121,9 @@ const MicButton = () => {
 
   return (
     <Tooltip title={`Turn ${isOn ? 'off' : 'on'} yor microphone`}>
-      <ButtonStyle onClick={onClickHandler}>
-        {isOn ? <IconMicOff /> : <IconMicOn />}
-      </ButtonStyle>
+      <RecordButtonStyled isOn={isOn} onClick={onClickHandler}>
+        <IconMicOn />
+      </RecordButtonStyled>
     </Tooltip>
   )
 }
@@ -129,6 +135,5 @@ export const ActionBlock = () => {
 
       <FileUploadButton />
     </WrapperStyle>
-  )  
+  )
 }
-

@@ -355,3 +355,14 @@ template {
 [hidden] {
   display: none;
 }
+
+@keyframes pulse {
+  from   {
+    background: radial-gradient(center, ellipse cover, rgba(255,0,0,1) 30%,rgba(255,0,0,0) 70%);
+    opacity:1;
+  }
+  to {
+    background: radial-gradient(center, ellipse cover, rgba(255,0,0,1) 30%,rgba(255,0,0,0) 70%);
+    opacity:0.5;
+  }
+}
