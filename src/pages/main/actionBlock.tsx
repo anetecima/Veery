@@ -83,7 +83,7 @@ const FileUploadButton = () => {
   )
 }
 
-const MicButton = ({sessionSync} : {sessionSync: SessionSync}) => {
+const MicButton = ({ sessionSync }: { sessionSync: SessionSync }) => {
   const [isOn, setIsOn] = useState<boolean>(false)
   const [isAudioRecorderInit, setAudioRecorderInit] = useState<boolean>(false)
 
@@ -117,7 +117,7 @@ const MicButton = ({sessionSync} : {sessionSync: SessionSync}) => {
   }
 
   return (
-    <Tooltip title={`Turn ${isOn ? 'off' : 'on'} yor microphone`}>
+    <Tooltip title={`Turn ${isOn ? 'off' : 'on'} your microphone`}>
       <RecordButtonStyled isOn={isOn} onClick={onClickHandler}>
         <IconMicOn />
       </RecordButtonStyled>
@@ -125,10 +125,10 @@ const MicButton = ({sessionSync} : {sessionSync: SessionSync}) => {
   )
 }
 
-export const ActionBlock = ({sessionSync} : {sessionSync: SessionSync}) => {
+export const ActionBlock = ({ sessionSync }: { sessionSync: SessionSync }) => {
   return (
     <WrapperStyle>
-      <MicButton sessionSync={sessionSync}/>
+      <MicButton sessionSync={sessionSync} />
 
       <FileUploadButton />
     </WrapperStyle>
