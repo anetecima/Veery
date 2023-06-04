@@ -7,7 +7,7 @@ import numpy as np
 
 
 async def send_audio_chunks():
-    audio_path = "audio_file.wav"
+    audio_path = "solo.wav"
 
     # Load the audio file using librosa with original sample rate, and ensure it's mono
     y, sr = librosa.load(audio_path, sr=None, mono=True)
@@ -23,7 +23,7 @@ async def send_audio_chunks():
     sf.write("processed.wav", y, sr)
 
     # Calculate chunk size based on sample rate
-    chunk_size = int(sr * 0.02)  # One second chunks
+    chunk_size = int(sr * 5)  # One second chunks
 
     # Split the audio data into 1-second chunks
     if len(y) < chunk_size:
@@ -32,7 +32,7 @@ async def send_audio_chunks():
         audio_chunks = [y[i : i + chunk_size] for i in range(0, len(y), chunk_size)]
 
     for audio_chunk in audio_chunks:
-        async with websockets.connect("ws://localhost:8775") as websocket:
+        async with websockets.connect("ws://127.0.0.1:8775") as websocket:
             print(f"Sending audio chunk: {audio_chunk}")
             # Convert audio chunk to bytes
             byte_data = BytesIO()

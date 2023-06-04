@@ -8,3 +8,5 @@
   105  pip install avconc
   106  pip install avconv
   108  pip install ffmpeg
+
+pip install basic-pitch websockets numpy midutil pydub avconv 

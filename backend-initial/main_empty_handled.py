@@ -14,6 +14,7 @@ basic_pitch_model = tf.saved_model.load(str(ICASSP_2022_MODEL_PATH))
 
 async def process_audio(websocket, path):
     byte_data = await websocket.recv()
+    print(byte_data)
     timestamp = datetime.datetime.now().strftime("%H%M%S%f")
     # random number variable
     random_number = random.randint(1000, 5000)
