@@ -45,7 +45,7 @@ const RecordButtonStyled = styled(ButtonStyle)<{ isOn: boolean }>`
     props.isOn ? 'pulse 0.5s ease-in-out infinite alternate' : 'none'};
 `
 
-const FileUploadButton = () => {
+const FileUploadButton = ({sessionSync} : {sessionSync: SessionSync}) => {
   const hiddenFileInput = useRef<HTMLInputElement>(null)
 
   const handleClick = () => {
@@ -55,15 +55,31 @@ const FileUploadButton = () => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
   const onReaderLoad = (event) => {
-    //todo: file processing happens here
   }
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
   const onFileUpload = (event) => {
-    const reader = new FileReader()
-    reader.onload = onReaderLoad
-    reader.readAsText(event.target.files[0])
+   
+    const file = event.target.files[0];
+
+    if (!file) {
+      console.log('No file selected');
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const audioData = reader.result as ArrayBuffer;
+      const blob = new Blob([audioData]);
+
+      sessionSync.sendAudioData(blob);
+    };
+    reader.readAsArrayBuffer(file);
+
+
+
   }
 
   return (
@@ -130,7 +146,7 @@ export const ActionBlock = ({ sessionSync }: { sessionSync: SessionSync }) => {
     <WrapperStyle>
       <MicButton sessionSync={sessionSync} />
 
-      <FileUploadButton />
+      <FileUploadButton sessionSync={sessionSync}/>
     </WrapperStyle>
   )
 }

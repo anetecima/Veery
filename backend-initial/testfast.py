@@ -11,7 +11,7 @@ import random
 basic_pitch_model = tf.saved_model.load(str(ICASSP_2022_MODEL_PATH))
 
 
-audio_paths = ["short-polyphonic.mp3"]
+audio_paths = ["output.mp3"]
 predict_and_save(
     audio_paths,
     output_directory=f".",
@@ -20,5 +20,5 @@ predict_and_save(
     save_model_outputs=False,
     save_notes=False,
     minimum_frequency=50,
-    maximum_frequency=16000,
+    maximum_frequency=7000,
 )
