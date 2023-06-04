@@ -2,6 +2,8 @@ import styled from '@emotion/styled'
 import { IconFileUpload, IconMicOff, IconMicOn } from './icons.tsx'
 import { useRef, useState } from 'react'
 import { Tooltip } from '@mui/material'
+import { SessionSync } from '../../services/session-sync.ts'
+import { WAVEncoder } from '../../services/wav-encoder.ts'
 
 const WrapperStyle = styled.div`
   display: flex;
@@ -30,6 +32,12 @@ const FileInputStyled = styled.input`
   //opacity: 0;
 `
 
+
+const wsServerUrl = 'ws://127.0.0.1:8775';
+const sessionSync = new SessionSync(wsServerUrl);
+
+
+
 const FileUploadButton = () => {
   const hiddenFileInput = useRef<HTMLInputElement>(null)
 
@@ -51,6 +59,8 @@ const FileUploadButton = () => {
     reader.readAsText(event.target.files[0])
   }
 
+  
+
   return (
     <Tooltip title="Upload new audio file">
       <div style={{ display: 'flex' }}>
@@ -69,10 +79,38 @@ const FileUploadButton = () => {
 }
 
 const MicButton = () => {
-  const [isOn, setIsOn] = useState<boolean>(false)
+  const [isOn, setIsOn] = useState<boolean>(false);
+  const [isAudioRecorderInit, setAudioRecorderInit] = useState<boolean>(false);
 
-  const onClickHandler = () => {
-    setIsOn((prev) => !prev)
+  const wavEncoder = new WAVEncoder((blob) =>{
+    console.log('test data: ', blob);
+    sessionSync.sendAudioData(blob);
+  })
+  
+
+  const initMicRecorder = async ()=>{
+    if(!isAudioRecorderInit){
+      await wavEncoder.setUserMediaStream();
+      wavEncoder.setMediaRecorder();
+      setAudioRecorderInit(true);
+    }
+  }
+
+  const onClickHandler = async () => {
+
+    await initMicRecorder();
+    
+    setIsOn((prev) => {
+      // check if first time
+      const newState = !prev;
+      
+      if(!newState){
+        wavEncoder.stopRecording();
+      }else{
+        wavEncoder.startRecording();
+      }
+      return newState
+    })
   }
 
   return (
@@ -91,5 +129,6 @@ export const ActionBlock = () => {
 
       <FileUploadButton />
     </WrapperStyle>
-  )
+  )  
 }
+
