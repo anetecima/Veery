@@ -18,6 +18,16 @@ const PictureStyle = styled.div<{ picture: string }>`
   background-size: contain;
 `
 
+const BandPictureStyle = styled.div`
+  width: 100%;
+  max-width: 800px;
+  height: 575px;
+  margin: 0 auto;
+  background: url('/the_band_1.png') no-repeat;
+  border-radius: 20px;
+  background-size: cover;
+`
+
 const MemberItem = ({
   name,
   role,
@@ -50,6 +60,7 @@ export const AboutUsPage = () => (
 
     <div style={{ padding: '0 40px 40px', flexGrow: 3 }}>
       <h2 style={{ textAlign: 'center' }}>The Band</h2>
+      <BandPictureStyle />
 
       <div
         style={{
