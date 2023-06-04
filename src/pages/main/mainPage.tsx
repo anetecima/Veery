@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
 import { MidiDisplay } from './midiDisplay.tsx'
 
-
 import { PageHeader } from './header.tsx'
 import { PageIntro } from '../intro/introPage.tsx'
 import { Footer } from './footer.tsx'
@@ -15,16 +14,14 @@ const PageStyle = styled.div`
 `
 
 const wsServerUrl = 'ws://127.0.0.1:8775'
-const sessionSync = new SessionSync(wsServerUrl);
+const sessionSync = new SessionSync(wsServerUrl)
 
 export const MainPage = () => (
   <PageStyle>
-    <PageHeader sessionSync={sessionSync}/>
-
-    <PageIntro />
+    <PageHeader sessionSync={sessionSync} />
 
     <MidiDisplay sessionSync={sessionSync} />
-    
+    <PageIntro />
     <Footer />
   </PageStyle>
 )

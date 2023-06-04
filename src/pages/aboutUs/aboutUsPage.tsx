@@ -56,7 +56,7 @@ export const AboutUsPage = () => (
   <PageStyle>
     <PageHeaderMin />
 
-    <PageIntro />
+    {/* <PageIntro /> */}
 
     <div style={{ padding: '0 40px 40px', flexGrow: 3 }}>
       <h2 style={{ textAlign: 'center' }}>The Band</h2>
