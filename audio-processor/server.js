@@ -1,7 +1,6 @@
 const WebSocket = require('ws');
 const fs = require('fs');
 const { spawn } = require('child_process');
-const ffmpeg = require('fluent-ffmpeg');
 const { v4: uuidv4 } = require('uuid');
 
 const wss = new WebSocket.Server({ port: 8080 });
@@ -22,7 +21,7 @@ wss.on('connection', (ws) => {
 
     // Convert the WAV file to MP3 using ffmpeg
     const mp3FilePath = `${uniqueFileName}.mp3`;
-    const ffmpegProcess = spawn(ffmpeg.getExecutable(), [
+    const ffmpegProcess = spawn('ffmpeg', [
       '-i',
       wavFilePath,
       '-codec:a',
@@ -46,7 +45,7 @@ wss.on('connection', (ws) => {
           // Send the MP3 data to the other server
           otherServerWebSocket.send(mp3Data);
 
-          console.log('MP3 data sent to the other server.', mp3Data);
+          console.log('MP3 data sent to the other server.');
 
           // Close the WebSocket connection
           otherServerWebSocket.close();
@@ -56,19 +55,24 @@ wss.on('connection', (ws) => {
           fs.unlinkSync(mp3FilePath);
         });
 
+        otherServerWebSocket.on('message', (data)=>{
+            console.log('message from server: ', data);
+        })
+
         otherServerWebSocket.on('error', (error) => {
           console.error('Error occurred while connecting to the other server:', error);
+          
 
-          // Remove temporary files
-          fs.unlinkSync(wavFilePath);
-          fs.unlinkSync(mp3FilePath);
+        //   // Remove temporary files
+        //   fs.unlinkSync(wavFilePath);
+        //   fs.unlinkSync(mp3FilePath);
         });
       } else {
         console.error('Audio conversion failed with code:', code);
 
-        // Remove temporary files
-        fs.unlinkSync(wavFilePath);
-        fs.unlinkSync(mp3FilePath);
+        // // Remove temporary files
+        // fs.unlinkSync(wavFilePath);
+        // fs.unlinkSync(mp3FilePath);
       }
     });
   });
@@ -77,3 +81,5 @@ wss.on('connection', (ws) => {
     console.log('A client disconnected');
   });
 });
+
+console.log('server running on 8080')
