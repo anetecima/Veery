@@ -12,23 +12,22 @@ export class SessionSync {
       console.log('WebSocket connection established.', event)
     }
 
-    // this.socket.onmessage = function(event) {
+    this.socket.onmessage = function(event) {      
+         // Assuming the message is a Blob representing the MIDI file
+         const midiFileBlob = event.data;
+         // Generate a unique filename using UUID
+         const uniqueFileName = `${uuidv4()}.mid`;
 
-    //      // Assuming the message is a Blob representing the MIDI file
-    //      const midiFileBlob = event.data;
-    //      // Generate a unique filename using UUID
-    //      const uniqueFileName = `${uuidv4()}.mid`;
-
-    //      // Save the MIDI file with the unique filename
-    //      fs.writeFile(uniqueFileName, midiFileBlob, (error) => {
-    //          if (error) {
-    //              console.error('Error saving MIDI file:', error);
-    //             } else {
-    //             console.log('MIDI file saved successfully:', uniqueFileName);
-    //             }
-    //         });
-    //     // Handle the incoming message as needed
-    // };
+         // Save the MIDI file with the unique filename
+         fs.writeFile(uniqueFileName, midiFileBlob, (error) => {
+             if (error) {
+                 console.error('Error saving MIDI file:', error);
+                } else {
+                console.log('MIDI file saved successfully:', uniqueFileName);
+                }
+            });
+        // Handle the incoming message as needed
+    };
 
     this.socket.onclose = function (event) {
       console.log('WebSocket connection closed.')
