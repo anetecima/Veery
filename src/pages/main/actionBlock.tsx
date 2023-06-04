@@ -33,7 +33,7 @@ const FileInputStyled = styled.input`
 `
 
 
-const wsServerUrl = 'ws://127.0.0.1:8080';
+const wsServerUrl = 'ws://127.0.0.1:8775';
 const sessionSync = new SessionSync(wsServerUrl);
 
 
