@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { Recorder } from './recorder';
 import { MidiDisplay } from './midiDisplay.tsx'
+import { SessionSync } from '../../services/session-sync.ts';
 
 
 
@@ -25,6 +26,10 @@ const PageStyle = styled.div`
   background-color: #ffffff;
 `
 
+const wsServerUrl = 'ws://127.0.0.1:8775';
+const sessionSync = new SessionSync(wsServerUrl);
+
+
 export const MainPage = () => (
   <PageStyle>
     <LogoWrapper>
@@ -34,6 +39,6 @@ export const MainPage = () => (
 
     <MidiDisplay />
     
-    <Recorder/>
+    <Recorder  sessionSync={sessionSync}/>
   </PageStyle>
 )

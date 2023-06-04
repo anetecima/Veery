@@ -1,36 +1,62 @@
-import encodeWAV from 'audiobuffer-to-wav';
+import RecordRTC from "recordrtc";
+
 
 
 export class WAVEncoder {
-    private audioContext: AudioContext;
+    private mediaRecorder?: RecordRTC;
+    private userMediaStream?: MediaStream;
+    private onwavdataavailable: (blob: Blob)=> void;
   
-    constructor() {
-      this.audioContext = new (window.AudioContext)();
-    }
-  
-    async encodeToWAV(audioBuffer: AudioBuffer): Promise<Blob> {
-      return new Promise((resolve, reject) => {
-        const wavData = encodeWAV(audioBuffer);
-        const blob = new Blob([wavData], { type: 'audio/wav' });
-        resolve(blob);
-      });
+    constructor(onwavdataavailable: (blob: Blob)=> void) {
+      this.onwavdataavailable = onwavdataavailable;      
     }
 
-    decodeAudioData(blob: Blob): Promise<AudioBuffer> {
-        return new Promise((resolve, reject) => {
-          const fileReader = new FileReader();
-          fileReader.onload = () => {
-            const arrayBuffer = fileReader.result as ArrayBuffer;
-            this.audioContext.decodeAudioData(arrayBuffer, (audioBuffer) => {
-              resolve(audioBuffer);
-            }, (error) => {
-              reject(error);
-            });
-          };
-          fileReader.onerror = (error) => {
-            reject(error);
-          };
-          fileReader.readAsArrayBuffer(blob);
-        });
+    startRecording() {
+      if(this.mediaRecorder){
+        this.mediaRecorder.startRecording();
       }
+    }
+
+    stopRecording(){
+      if(this.mediaRecorder){
+        this.mediaRecorder.stopRecording();
+      }
+    }
+
+   setMediaRecorder(): void{
+    const stream = this.userMediaStream; 
+    if(stream){
+      this.mediaRecorder = new RecordRTC(stream, {
+        type: 'audio',
+        mimeType: 'audio/wav',
+        timeSlice: 5000, // Record audio in chunks of specified duration,
+
+        ondataavailable: (blob) => {
+          this.onwavdataavailable(blob);
+        }
+      });
+    }
+   }
+
+   async setUserMediaStream(): Promise<void>{
+    const mediaConstraints = { audio: true };
+    this.userMediaStream = await navigator.mediaDevices.getUserMedia(mediaConstraints);    
+  }
+
+  // private convertToWav(): void{
+  //     // Create a new AudioBuffer with the desired sample rate and channel count
+  //     const audioContext = new AudioContext();
+  //     const wavBuffer = audioContext.createBuffer(32768, 1, 1);
+
+  //     // Copy the audio data from the decoded AudioBuffer to the new AudioBuffer
+  //     for (let channel = 0; channel < channelCount; channel++) {
+  //       const channelData = decodedData.getChannelData(channel);
+  //       wavBuffer.copyToChannel(channelData, channel);
+  //     }
+
+  //     // Create a WAV Blob from the new AudioBuffer
+  //     const wavData = new Blob([encodeWav(wavBuffer)], { type: 'audio/wav' });
+  // }
+  
+
   }

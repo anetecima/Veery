@@ -1,11 +1,29 @@
-import RecordRTC from "recordrtc";
+import { SessionSync } from "../../services/session-sync";
+import { WAVEncoder } from "../../services/wav-encoder";
 
-export const Recorder = () => {
+export const Recorder = ({ sessionSync }: {sessionSync: SessionSync}) => {
+
+  const wavEncoder = new WAVEncoder((blob) =>{
+    saveWavData(blob);
+  })
+
+  const saveWavData =  (blob: Blob) => {
+    console.log('data: ', blob)
+    // const file = new File([blob], 'recording.wav', { type: 'audio/wav' });
+    sessionSync.sendAudioData(blob)
+  }
+  
+
     const handleStartRecording = async () => {
-        startRecording();
+      // todo: call setuUserMedia stream and set media recorder only once on the init time.
+      await wavEncoder.setUserMediaStream();
+      wavEncoder.setMediaRecorder();
+
+      wavEncoder.startRecording();
     };
   
     const handleStopRecording = () => {
+      wavEncoder.stopRecording();
     };
 
     return (
@@ -17,37 +35,6 @@ export const Recorder = () => {
     );
   };
 
-
-
-function startRecording() {
-  const mediaConstraints = { audio: true };
-
-  navigator.mediaDevices.getUserMedia(mediaConstraints)
-    .then(function(stream) {
-      const recorder = new RecordRTC(stream, {
-        type: 'audio',
-        mimeType: 'audio/wav',
-        timeSlice: 5000, // Record audio in chunks of specified duration
-        ondataavailable: function(blob) {
-          saveWavData(blob);
-        }
-      });
-
-      recorder.startRecording();
-
-      setTimeout(function() {
-        saveWavData(recorder.getBlob());
-      }, 5000);
-    })
-    .catch(function(error) {
-      console.error('Error accessing microphone:', error);
-    });
-}
-
-function saveWavData(blob: Blob) {
-  const file = new File([blob], 'recording.wav', { type: 'audio/wav' });
-  console.log('file: ', blob, file)
-}
 
 
 
