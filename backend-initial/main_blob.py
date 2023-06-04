@@ -21,7 +21,7 @@ async def process_audio(websocket, path):
     random_number = random.randint(1000, 5000)
 
     # Save the audio data to a .wav file
-    audio_filename = f"audio_{timestamp}.mp3"
+    audio_filename = f"audio_{timestamp}.wav"
     mid_filename = f"audio_{timestamp}_basic_pitch.mid"
 
     with open(audio_filename, "wb") as audio_file:
