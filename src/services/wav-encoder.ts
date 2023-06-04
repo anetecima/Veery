@@ -1,7 +1,4 @@
 import RecordRTC from "recordrtc";
-import  wav from "node-wav";
-
-
 
 
 export class WAVEncoder {
