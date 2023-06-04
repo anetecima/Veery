@@ -1,3 +1,7 @@
+import { v4 as uuidv4 } from 'uuid';
+import fs from 'fs';
+
+
 export class SessionSync{
 
     private readonly socket:WebSocket; 
@@ -11,8 +15,20 @@ export class SessionSync{
         };
 
         this.socket.onmessage = function(event) {
-            const message = event.data;
-            console.log('Received message:', event, message);
+
+             // Assuming the message is a Blob representing the MIDI file
+             const midiFileBlob = event.data;
+             // Generate a unique filename using UUID
+             const uniqueFileName = `${uuidv4()}.mid`;
+
+             // Save the MIDI file with the unique filename
+             fs.writeFile(uniqueFileName, midiFileBlob, (error) => {
+                 if (error) {
+                     console.error('Error saving MIDI file:', error);
+                    } else {
+                    console.log('MIDI file saved successfully:', uniqueFileName);
+                    }
+                });                    
             // Handle the incoming message as needed
         };
 
