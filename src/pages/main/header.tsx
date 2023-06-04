@@ -9,6 +9,10 @@ const LogoStyle = styled.div`
   background-size: contain;
 `
 const WrapperStyle = styled.div`
+  position: sticky;
+  top: 0;
+  right: 0;
+  left: 0;
   width: 100%;
   padding: 10px 40px;
   color: black;
@@ -18,11 +22,20 @@ const WrapperStyle = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: white;
 
-  a {
+  a,
+  a:hover,
+  a:visited {
+    text-decoration: none;
+    color: black;
+  }
+
+  .main-logo {
     display: flex;
     align-items: center;
     gap: 10px;
+    font-family: 'Lato', sans-serif;
 
     &,
     &:hover,
@@ -33,13 +46,51 @@ const WrapperStyle = styled.div`
   }
 `
 
+const NavigationStyle = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 40px;
+
+  a {
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+    transition: all 0.3s linear;
+
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+`
+
+const Navigation = () => (
+  <NavigationStyle>
+    <Link to="/about">ABOUT US</Link>
+  </NavigationStyle>
+)
+
 export const PageHeader = () => (
   <WrapperStyle>
-    <Link to="/">
+    <Link to="/" className="main-logo">
       <LogoStyle />
       <div>VEERY</div>
     </Link>
 
-    <ActionBlock />
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <ActionBlock />
+
+      <Navigation />
+    </div>
+  </WrapperStyle>
+)
+
+export const PageHeaderMin = () => (
+  <WrapperStyle>
+    <Link to="/" className="main-logo">
+      <LogoStyle />
+      <div>VEERY</div>
+    </Link>
+
+    <Navigation />
   </WrapperStyle>
 )
