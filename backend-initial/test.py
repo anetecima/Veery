@@ -23,7 +23,7 @@ async def send_audio_chunks():
     sf.write("processed.wav", y, sr)
 
     # Calculate chunk size based on sample rate
-    chunk_size = int(sr * 0.02)  # One second chunks
+    chunk_size = int(sr * 1)  # One second chunks
 
     # Split the audio data into 1-second chunks
     if len(y) < chunk_size:
@@ -40,7 +40,7 @@ async def send_audio_chunks():
             byte_data.seek(0)  # Important to reset the stream position
             await websocket.send(byte_data.read())
             midi_file_path = await websocket.recv()
-            print(f"MIDI file path: {midi_file_path}")
+            print(f"MIDI file data: {midi_file_path}")
 
 
 asyncio.get_event_loop().run_until_complete(send_audio_chunks())

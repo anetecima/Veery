@@ -1,13 +1,15 @@
 import asyncio
 import datetime
+import random
 import tensorflow as tf
 from basic_pitch.inference import predict
 from basic_pitch import ICASSP_2022_MODEL_PATH
 from midiutil.MidiFile import MIDIFile
 import websockets
 from basic_pitch.inference import predict_and_save
-import random
 import librosa
+import aiofiles
+import subprocess
 
 basic_pitch_model = tf.saved_model.load(str(ICASSP_2022_MODEL_PATH))
 
@@ -19,14 +21,18 @@ async def process_audio(websocket, path):
     # random number variable
     random_number = random.randint(1000, 5000)
 
-    # Save the audio data to a .wav file
-    audio_filename = f"audio_{timestamp}.wav"
+    # Save the audio data to a .webm file
+    audio_filename = f"audio_{timestamp}.ogg"
+    converted_filename = f"audio_{timestamp}.wav"
     mid_filename = f"audio_{timestamp}_basic_pitch.mid"
 
     with open(audio_filename, "wb") as audio_file:
         audio_file.write(byte_data)
 
-    audio_paths = [audio_filename]
+    # Convert the .webm file to .wav
+    subprocess.run(["ffmpeg", "-i", audio_filename, converted_filename])
+
+    audio_paths = [converted_filename]
     try:
         predict_and_save(
             audio_paths,
@@ -39,9 +45,9 @@ async def process_audio(websocket, path):
     except ValueError:
         # If an error occurs (e.g., because the audio data is unprocessable),
         # create an empty MIDI file
-        y, sr = librosa.load(audio_filename, sr=None)
+        y, sr = librosa.load(converted_filename, sr=None)
         duration = librosa.get_duration(
-            filename=audio_filename
+            filename=converted_filename
         )  # get duration in seconds
         mf = MIDIFile(1)
         track = 0  # the only track
@@ -58,10 +64,15 @@ async def process_audio(websocket, path):
             f"Created empty MIDI file {mid_filename} due to unprocessable audio data."
         )
 
-    await websocket.send(mid_filename)
+    # Read the MIDI file data into memory
+    async with aiofiles.open(mid_filename, "rb") as midi_file:
+        midi_data = await midi_file.read()
+
+    # Send the MIDI file data back over WebSocket
+    await websocket.send(midi_data)
 
 
-start_server = websockets.serve(process_audio, "172.26.0.2", 8775)
+start_server = websockets.serve(process_audio, "127.0.0.1", 8775)
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
