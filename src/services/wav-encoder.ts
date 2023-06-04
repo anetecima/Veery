@@ -28,7 +28,7 @@ export class WAVEncoder {
       this.mediaRecorder = new RecordRTC(stream, {
         type: 'audio',
         mimeType: 'audio/webm',
-        timeSlice: 5000, // Record audio in chunks of specified duration,
+        timeSlice: 20000, // Record audio in chunks of specified duration,
 
         ondataavailable: async (blob) => {
           this.onwavdataavailable(blob);

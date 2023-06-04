@@ -2,6 +2,7 @@ import { Midi } from '@tonejs/midi'
 import { Fragment, useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import { CombinedTracks, transformTrackInfo } from './transformTrackInfo.ts'
+import { SessionSync } from '../../services/session-sync.ts'
 
 const MidiStyle = styled.div`
   width: 100%;
@@ -27,29 +28,20 @@ const heightUnit = 100
 const noteAmount = 12
 const midiHeight = heightUnit * noteAmount * 8
 
-export const MidiDisplay = () => {
+export const MidiDisplay = ({sessionSync} : {sessionSync: SessionSync}) => {
   const [combinedTracks, setCombinedTracks] = useState<CombinedTracks[]>([])
 
-  const uploadMidi = () => {
-    Midi.fromUrl('/solo_basic_pitch.mid').then((midi) => {
-      // setCombinedTracks((prev) => transformTrackInfo(midi.tracks, prev))
-      setCombinedTracks((_prev) => transformTrackInfo(midi.tracks))
-    })
-    //
-    // Midi.fromUrl('/test_1.mid').then((midi) =>
-    //   setCombinedTracks((prev) => transformTrackInfo(midi.tracks, prev))
-    // )
-    //
-    // Midi.fromUrl('/test_2.mid').then((midi) =>
-    //   setCombinedTracks((prev) => transformTrackInfo(midi.tracks, prev))
-    // )
-    // // Midi.fromUrl('/test_audio.mid').then((midi) =>
-    // //   setCombinedTracks((prev) => transformTrackInfo(midi.tracks, prev))
-    // // )
+  const uploadMidi = async (blob: Blob) => {
+    const buffer = await blob.arrayBuffer();
+    const uint8Array = new Uint8Array(buffer);
+    const midi = new Midi(uint8Array);
+    setCombinedTracks((_prev) => transformTrackInfo(midi.tracks))
   }
 
   useEffect(() => {
-    uploadMidi()
+    sessionSync.midiData.subscribe(blob => {
+      uploadMidi(blob)
+    })
 
     return () => setCombinedTracks([])
   }, [])

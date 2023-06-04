@@ -2,8 +2,8 @@ import styled from '@emotion/styled'
 import { IconFileUpload, IconMicOn } from './icons.tsx'
 import { useRef, useState } from 'react'
 import { Tooltip } from '@mui/material'
-import { SessionSync } from '../../services/session-sync.ts'
 import { WAVEncoder } from '../../services/wav-encoder.ts'
+import { SessionSync } from '../../services/session-sync.ts'
 
 const WrapperStyle = styled.div`
   display: flex;
@@ -45,9 +45,6 @@ const RecordButtonStyled = styled(ButtonStyle)<{ isOn: boolean }>`
     props.isOn ? 'pulse 0.5s ease-in-out infinite alternate' : 'none'};
 `
 
-const wsServerUrl = 'ws://127.0.0.1:8775'
-const sessionSync = new SessionSync(wsServerUrl)
-
 const FileUploadButton = () => {
   const hiddenFileInput = useRef<HTMLInputElement>(null)
 
@@ -86,7 +83,7 @@ const FileUploadButton = () => {
   )
 }
 
-const MicButton = () => {
+const MicButton = ({sessionSync} : {sessionSync: SessionSync}) => {
   const [isOn, setIsOn] = useState<boolean>(false)
   const [isAudioRecorderInit, setAudioRecorderInit] = useState<boolean>(false)
 
@@ -128,10 +125,10 @@ const MicButton = () => {
   )
 }
 
-export const ActionBlock = () => {
+export const ActionBlock = ({sessionSync} : {sessionSync: SessionSync}) => {
   return (
     <WrapperStyle>
-      <MicButton />
+      <MicButton sessionSync={sessionSync}/>
 
       <FileUploadButton />
     </WrapperStyle>
