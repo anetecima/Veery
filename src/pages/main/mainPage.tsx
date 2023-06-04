@@ -1,7 +1,5 @@
 import styled from '@emotion/styled'
-import { Recorder } from './recorder';
 import { MidiDisplay } from './midiDisplay.tsx'
-import { SessionSync } from '../../services/session-sync.ts';
 
 
 import { PageHeader } from './header.tsx'
