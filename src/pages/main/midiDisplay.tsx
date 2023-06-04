@@ -1,6 +1,7 @@
-import { Midi, Track } from '@tonejs/midi'
+import { Midi } from '@tonejs/midi'
 import { Fragment, useEffect, useState } from 'react'
 import styled from '@emotion/styled'
+import { CombinedTracks, transformTrackInfo } from './transformTrackInfo.ts'
 
 const MidiStyle = styled.div`
   width: 100%;
@@ -27,21 +28,33 @@ const noteAmount = 12
 const midiHeight = heightUnit * noteAmount * 8
 
 export const MidiDisplay = () => {
-  const [tracks, setTracks] = useState<Track[]>([])
+  const [combinedTracks, setCombinedTracks] = useState<CombinedTracks[]>([])
 
-  const uploadMidi = async () => {
-    const midi = await Midi.fromUrl('/test_audio.mid')
-    // const name = midi.name
-    // console.log(name)
-    // console.log(midi)
-    setTracks(midi?.tracks || [])
+  const uploadMidi = () => {
+    Midi.fromUrl('/solo_basic_pitch.mid').then((midi) => {
+      // setCombinedTracks((prev) => transformTrackInfo(midi.tracks, prev))
+      setCombinedTracks((_prev) => transformTrackInfo(midi.tracks))
+    })
+    //
+    // Midi.fromUrl('/test_1.mid').then((midi) =>
+    //   setCombinedTracks((prev) => transformTrackInfo(midi.tracks, prev))
+    // )
+    //
+    // Midi.fromUrl('/test_2.mid').then((midi) =>
+    //   setCombinedTracks((prev) => transformTrackInfo(midi.tracks, prev))
+    // )
+    // // Midi.fromUrl('/test_audio.mid').then((midi) =>
+    // //   setCombinedTracks((prev) => transformTrackInfo(midi.tracks, prev))
+    // // )
   }
 
   useEffect(() => {
     uploadMidi()
+
+    return () => setCombinedTracks([])
   }, [])
 
-  return tracks.length ? (
+  return combinedTracks.length ? (
     <MidiStyle>
       <svg viewBox={`0 0 ${30000} ${midiHeight} `} transform="scale(1, -1)">
         {[...Array(8)].map((_octave, octaveIndex) => {
@@ -63,6 +76,7 @@ export const MidiDisplay = () => {
                   />
                 </Fragment>
               ))}
+
               {/* octave */}
               <text
                 fontSize={300}
@@ -78,20 +92,29 @@ export const MidiDisplay = () => {
             </Fragment>
           )
         })}
-        )
-        {tracks.map((track, trackIndex) => {
-          return track?.notes
-            .filter((note) => note.time < 30)
-            .map((note, noteIndex) => (
-              <rect
-                key={`note_${trackIndex}_${noteIndex}`}
-                fill={`hsl( ${(360 / tracks.length) * trackIndex}, 100%, 50%)`}
-                x={note.time * 1000}
-                y={notes.indexOf(note.pitch) * heightUnit * note.octave}
-                width={note.duration * 1000}
-                height={heightUnit}
-              />
-            ))
+
+        {combinedTracks.map((combinationArray, combinationArrayIndex) => {
+          let trackOffset = 0
+          return combinationArray.map((track, trackIndex) => {
+            // trackOffset += track?.duration || 0
+
+            return track?.notes
+              .filter((note) => note.time < 30)
+              .map((note, noteIndex) => {
+                return (
+                  <rect
+                    key={`note_${trackIndex}_${noteIndex}`}
+                    fill={`hsl( ${
+                      (360 / combinedTracks.length) * combinationArrayIndex
+                    }, 100%, 50%)`}
+                    x={(note.time + trackOffset) * 1000}
+                    y={notes.indexOf(note.pitch) * heightUnit * note.octave}
+                    width={note.duration * 1000}
+                    height={heightUnit}
+                  />
+                )
+              })
+          })
         })}
       </svg>
     </MidiStyle>

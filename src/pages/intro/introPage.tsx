@@ -10,6 +10,18 @@ export const PageIntro = () => {
       <h1>Welcome to VEERY - the app</h1>
 
       <div>
+        <h6
+          style={{
+            fontWeight: 400,
+            fontSize: '20px',
+            margin: 0,
+            fontFamily: 'Lato, sans-serif',
+            fontStyle: 'italic',
+          }}
+        >
+          You want your pitch - we got it!
+        </h6>
+
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
           tempor turpis at neque tincidunt tristique. Nulla magna risus,

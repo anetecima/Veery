@@ -61,7 +61,7 @@ async def process_audio(websocket, path):
     await websocket.send(mid_filename)
 
 
-start_server = websockets.serve(process_audio, "172.26.0.2", 8775)
+start_server = websockets.serve(process_audio, "127.0.0.1", 8775)
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()

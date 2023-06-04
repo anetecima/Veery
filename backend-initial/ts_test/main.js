@@ -1,6 +1,7 @@
 let mediaRecorder
 let chunks = []
 let ws
+let isWebSocketOpen = false
 
 const startButton = document.getElementById('startRecording')
 const stopButton = document.getElementById('stopRecording')
@@ -11,6 +12,7 @@ ws = new WebSocket('ws://localhost:8775')
 // Connection opened
 ws.addEventListener('open', function (event) {
   console.log('Connection opened.')
+  isWebSocketOpen = true
 })
 
 // Listen for messages
@@ -33,6 +35,7 @@ ws.addEventListener('message', function (event) {
 // Connection closed
 ws.addEventListener('close', function (event) {
   console.log('Connection closed.')
+  isWebSocketOpen = false
 })
 
 // Connection error
@@ -53,8 +56,10 @@ startButton.onclick = async () => {
     if (chunks.length >= 1) {
       const blob = new Blob(chunks, { type: mediaRecorder.mimeType })
 
-      // Send the blob data over the WebSocket connection
-      ws.send(blob)
+      // Send the blob data over the WebSocket connection if it's open
+      if (isWebSocketOpen) {
+        ws.send(blob)
+      }
 
       // Clear the chunks
       chunks = []
@@ -62,10 +67,15 @@ startButton.onclick = async () => {
   }
 
   // Start recording
-  mediaRecorder.start(5000) // Record a chunk every second
+  mediaRecorder.start(1000) // Record a chunk every second
 }
 
 stopButton.onclick = () => {
   // Stop recording
   mediaRecorder.stop()
+
+  // Close the WebSocket connection
+  if (isWebSocketOpen) {
+    ws.close()
+  }
 }
