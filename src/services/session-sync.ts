@@ -3,12 +3,8 @@ import { Subject } from 'rxjs'
 export class SessionSync {
   private readonly socket: WebSocket
 
-<<<<<<< HEAD
   midiData = new Subject<any>()
-=======
-  midiData = new Subject<any>();
-  isLoading = new Subject<boolean>();
->>>>>>> cf26f6d7978a627dcae4619bae3cf7be3c660e3e
+  isLoading = new Subject<boolean>()
 
   constructor(uri: string) {
     this.socket = new WebSocket(uri)
@@ -24,16 +20,9 @@ export class SessionSync {
       // Generate a unique filename using UUID
 
       console.log('midi file: ', midiFileBlob)
-
-<<<<<<< HEAD
       this.midiData.next(midiFileBlob)
-
+      this.isLoading.next(false)
       // Handle the incoming message as needed
-=======
-      this.midiData.next(midiFileBlob);
-      this.isLoading.next(false);
-      // Handle the incoming message as needed      
->>>>>>> cf26f6d7978a627dcae4619bae3cf7be3c660e3e
     }
 
     this.socket.onclose = function () {
@@ -46,8 +35,7 @@ export class SessionSync {
   }
 
   sendAudioData(data: Blob): void {
-    this.isLoading.next(true);
-    this.socket.send(data);
+    this.isLoading.next(true)
+    this.socket.send(data)
   }
-
 }
