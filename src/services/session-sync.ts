@@ -4,6 +4,7 @@ export class SessionSync {
   private readonly socket: WebSocket
 
   midiData = new Subject<any>();
+  isLoading = new Subject<boolean>();
 
   constructor(uri: string) {
     this.socket = new WebSocket(uri)
@@ -20,9 +21,9 @@ export class SessionSync {
 
       console.log('midi file: ', midiFileBlob);
 
-      this.midiData.next(midiFileBlob)
-      
-      // Handle the incoming message as needed
+      this.midiData.next(midiFileBlob);
+      this.isLoading.next(false);
+      // Handle the incoming message as needed      
     }
 
     this.socket.onclose = function (event) {
@@ -35,6 +36,8 @@ export class SessionSync {
   }
 
   sendAudioData(data: Blob): void {
-    this.socket.send(data)
+    this.isLoading.next(true);
+    this.socket.send(data);
   }
+
 }
